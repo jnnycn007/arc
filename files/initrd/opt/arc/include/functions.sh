@@ -661,23 +661,23 @@ function sendDiscord() {
 # Get Board Name
 function getBoardName() {
   local b v
-  if [ -r /sys/class/dmi/id/product_name ]; then
-    b="$(cat /sys/class/dmi/id/product_name 2>/dev/null || true)"
+  if command -v dmidecode >/dev/null 2>&1; then
+    b="$(dmidecode -s system-product-name 2>/dev/null || true)"
     b="$(echo "${b}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
   fi
-  if [ -z "${b}" ] || echo "${b}" | grep -Eq "O\.E\.M\.|System|To Be Filled By O\.E\.M\."; then
-    if [ -r /sys/class/dmi/id/board_name ]; then
-      b="$(cat /sys/class/dmi/id/board_name 2>/dev/null || true)"
+  if [ -z "${b}" ] || echo "${b}" | grep -Eq "O\.E\.M\.|System|To Be Filled By O\.E\.M\.|Synoden|Default string"; then
+    if command -v dmidecode >/dev/null 2>&1; then
+      b="$(dmidecode -s baseboard-product-name 2>/dev/null || true)"
       b="$(echo "${b}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
     fi
   fi
-  if [ -r /sys/class/dmi/id/sys_vendor ]; then
-    v="$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null || true)"
+  if command -v dmidecode >/dev/null 2>&1; then
+    v="$(dmidecode -s system-manufacturer 2>/dev/null || true)"
     v="$(echo "${v}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
   fi
-  if [ -z "${v}" ] || echo "${v}" | grep -Eq "O\.E\.M\.|System|To Be Filled By O\.E\.M\."; then
-    if [ -r /sys/class/dmi/id/board_vendor ]; then
-      v="$(cat /sys/class/dmi/id/board_vendor 2>/dev/null || true)"
+  if [ -z "${v}" ] || echo "${v}" | grep -Eq "O\.E\.M\.|System|To Be Filled By O\.E\.M\.|Synoden|Default string"; then
+    if command -v dmidecode >/dev/null 2>&1; then
+      v="$(dmidecode -s baseboard-manufacturer 2>/dev/null || true)"
       v="$(echo "${v}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
     fi
   fi
